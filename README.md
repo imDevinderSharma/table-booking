@@ -1,6 +1,3 @@
-Here’s the full **README.md** in proper markdown format, including all requested sections and written cohesively:
-
-```markdown
 # Little Lemon Restaurant Table Booking App
 
 [**Live Website**](https://table-booking-flax.vercel.app/)
