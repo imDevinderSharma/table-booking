@@ -131,7 +131,13 @@ const NavLinks = styled.div<{ isOpen: boolean }>`
   }
 `
 
-const MenuButton = styled.button`
+// Add this interface before the styled component
+interface MenuButtonProps {
+  isOpen: boolean;
+}
+
+// Change this
+const MenuButton = styled.button<MenuButtonProps>`
   display: none;
   background: none;
   border: none;

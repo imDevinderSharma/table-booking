@@ -194,6 +194,14 @@ interface BookingFormData {
   phone: string;
 }
 
+interface FormErrors {
+  date?: string;
+  time?: string;
+  guests?: string;
+  email?: string;
+  phone?: string;
+}
+
 const BookingForm = () => {
   const [formData, setFormData] = useState<BookingFormData>({
     date: '',
@@ -206,15 +214,11 @@ const BookingForm = () => {
     email: '',
     phone: ''
   });
-
-  const [errors, setErrors] = useState<Partial<BookingFormData>>({
-    date: '',
-    time: '',
-    guests: ''
-  });
+  
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<BookingFormData> = {};
+    const newErrors: FormErrors = {};
     let isValid = true;
 
     if (!formData.date) {
@@ -231,6 +235,16 @@ const BookingForm = () => {
       newErrors.guests = 'Number of guests must be between 1 and 10';
       isValid = false;
     }
+    
+    if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+      isValid = false;
+    }
+    
+    if (formData.phone && !/^[\d\s\(\)\-\+]+$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid phone number';
+      isValid = false;
+    }
 
     setErrors(newErrors);
     return isValid;
@@ -244,11 +258,11 @@ const BookingForm = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'guests' ? parseInt(value) : value
+      [name]: name === 'guests' ? parseInt(value) || 1 : value
     }));
   };
 
@@ -366,7 +380,9 @@ const BookingForm = () => {
             onChange={handleInputChange}
             required
             placeholder="your@email.com"
+            aria-invalid={!!errors.email}
           />
+          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
         </FormGroup>
 
         <FormGroup>
@@ -379,7 +395,9 @@ const BookingForm = () => {
             onChange={handleInputChange}
             required
             placeholder="(123) 456-7890"
+            aria-invalid={!!errors.phone}
           />
+          {errors.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
         </FormGroup>
 
         <FormGroup className="full-width">
