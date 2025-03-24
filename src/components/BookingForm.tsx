@@ -241,7 +241,7 @@ const BookingForm = () => {
       isValid = false;
     }
     
-    if (formData.phone && !/^[\d\s\(\)\-\+]+$/.test(formData.phone)) {
+    if (formData.phone && !/^\+?[\d\s\-()]{7,}$/.test(formData.phone)) {
       newErrors.phone = 'Please enter a valid phone number';
       isValid = false;
     }
